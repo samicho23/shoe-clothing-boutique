@@ -1,0 +1,2 @@
+import { Modal } from './Modal'
+export function ConfirmDialog({ open, message, onConfirm, onCancel }: { open: boolean; message: string; onConfirm: () => void; onCancel: () => void }) { return <Modal open={open}><div className="modal"><h2>Confirm action</h2><p className="muted">{message}</p><div className="modal-footer"><button className="button secondary" onClick={onCancel}>Cancel</button><button className="button primary" onClick={onConfirm}>Confirm</button></div></div></Modal> }
