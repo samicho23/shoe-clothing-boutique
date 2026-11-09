@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import { login, getCurrentUser } from './auth.service.js'
+import { login, register, getCurrentUser } from './auth.service.js'
 
 export const loginController = async (req: Request, res: Response) => {
   const result = await login(req.body)
@@ -8,6 +8,15 @@ export const loginController = async (req: Request, res: Response) => {
     return
   }
   res.json({ data: result })
+}
+
+export const registerController = async (req: Request, res: Response) => {
+  const result = await register(req.body)
+  if (!result) {
+    res.status(409).json({ error: 'An account with this email already exists' })
+    return
+  }
+  res.status(201).json({ data: result })
 }
 
 export const meController = (req: Request, res: Response) => {

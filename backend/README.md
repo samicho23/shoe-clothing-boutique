@@ -9,6 +9,8 @@ npm run dev
 
 The API is available at `http://localhost:4000/api/v1`. The in-memory store is intentionally a development foundation; the next backend phase can replace it with Prisma/PostgreSQL without changing the route prefix.
 
+Interactive Swagger documentation is available at `http://localhost:4000/api/docs`, and the OpenAPI document is available at `http://localhost:4000/api/docs.json`.
+
 Demo login:
 
 ```text
