@@ -1,2 +1,3 @@
 import { Router } from 'express'
-export const paymentRoutes = Router()
+import { resourceRouter } from '../resource-router.js'
+export const paymentRoutes = resourceRouter('payments')

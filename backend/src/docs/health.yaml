@@ -1,0 +1,11 @@
+tags:
+  - name: Health
+    description: Service health checks
+paths:
+  /api/v1/health:
+    get:
+      tags: [Health]
+      summary: Check API health
+      responses:
+        '200':
+          description: API is healthy

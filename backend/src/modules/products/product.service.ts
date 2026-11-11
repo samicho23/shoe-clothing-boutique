@@ -1,22 +1,53 @@
 import type { Product } from './product.types.js'
 import type { z } from 'zod'
 import type { productSchema } from './product.validation.js'
+import { prisma } from '../../config/database.js'
 
 type ProductInput = z.infer<typeof productSchema>
-const products: Product[] = [
-  { id: 'prod_1', name: 'Siena leather loafer', sku: 'SH-00248', category: 'Shoes', price: 189, stock: 24, status: 'In stock', createdAt: '2026-10-12T10:00:00.000Z' },
-  { id: 'prod_2', name: 'Luna satin shoulder bag', sku: 'BG-00106', category: 'Accessories', price: 129, stock: 8, status: 'Low stock', createdAt: '2026-10-16T10:00:00.000Z' },
-  { id: 'prod_3', name: 'Marais relaxed blazer', sku: 'CL-00389', category: 'Clothing', price: 245, stock: 0, status: 'Out of stock', createdAt: '2026-10-19T10:00:00.000Z' },
-]
+const toProduct = (product: { id: string; name: string; type: string; createdAt: Date; variants: { sku: string; sellingPrice: unknown; quantity: number }[]; category: { name: string } }): Product => {
+  const variant = product.variants[0]
+  const stock = variant?.quantity ?? 0
+  return {
+    id: product.id,
+    name: product.name,
+    sku: variant?.sku ?? '',
+    category: product.category.name as Product['category'],
+    price: Number(variant?.sellingPrice ?? 0),
+    stock,
+    status: stock === 0 ? 'Out of stock' : stock < 10 ? 'Low stock' : 'In stock',
+    createdAt: product.createdAt.toISOString(),
+  }
+}
 
-export const listProducts = (search = '', category = '') => products.filter((product) => {
-  const term = search.trim().toLowerCase()
-  return (!term || product.name.toLowerCase().includes(term) || product.sku.toLowerCase().includes(term)) && (!category || product.category === category)
-})
+export const listProducts = async (search = '', category = '') => {
+  const products = await prisma.product.findMany({
+    where: {
+      isActive: true,
+      ...(search.trim() ? { OR: [{ name: { contains: search.trim(), mode: 'insensitive' } }, { variants: { some: { sku: { contains: search.trim(), mode: 'insensitive' } } } }] } : {}),
+      ...(category ? { category: { name: category } } : {}),
+    },
+    include: { category: true, variants: { orderBy: { createdAt: 'asc' }, take: 1 } },
+    orderBy: { createdAt: 'desc' },
+  })
+  return products.map(toProduct)
+}
 
-export const createProduct = (input: ProductInput) => {
-  if (products.some((product) => product.sku.toLowerCase() === input.sku.toLowerCase())) return null
-  const product: Product = { id: `prod_${Date.now()}`, ...input, status: input.stock === 0 ? 'Out of stock' : input.stock < 10 ? 'Low stock' : 'In stock', createdAt: new Date().toISOString() }
-  products.unshift(product)
-  return product
+export const createProduct = async (input: ProductInput) => {
+  const existing = await prisma.productVariant.findUnique({ where: { sku: input.sku } })
+  if (existing) return null
+  const category = await prisma.category.upsert({
+    where: { name: input.category },
+    update: {},
+    create: { name: input.category, slug: input.category.toLowerCase().replace(/[^a-z0-9]+/g, '-') },
+  })
+  const product = await prisma.product.create({
+    data: {
+      name: input.name,
+      type: input.category.toUpperCase() as 'SHOES' | 'CLOTHING' | 'ACCESSORIES' | 'OTHER',
+      categoryId: category.id,
+      variants: { create: { sku: input.sku, sellingPrice: input.price, costPrice: 0, quantity: input.stock } },
+    },
+    include: { category: true, variants: true },
+  })
+  return toProduct(product)
 }

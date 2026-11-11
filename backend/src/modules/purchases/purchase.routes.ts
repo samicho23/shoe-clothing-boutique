@@ -1,2 +1,3 @@
 import { Router } from 'express'
-export const purchaseRoutes = Router()
+import { resourceRouter } from '../resource-router.js'
+export const purchaseRoutes = resourceRouter('purchases')

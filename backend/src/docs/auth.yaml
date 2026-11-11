@@ -1,0 +1,8 @@
+tags:
+  - name: Auth
+    description: Authentication and current user operations
+paths:
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      summary: Log in

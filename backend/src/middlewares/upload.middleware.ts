@@ -1,3 +1,3 @@
-import multer from 'multer'
+import { uploadStorage } from '../lib/uploads/storage.js'
 
-export const upload = multer({ dest: 'uploads/', limits: { fileSize: 5 * 1024 * 1024 } })
+export const upload = uploadStorage

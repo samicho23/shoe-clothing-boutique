@@ -1,0 +1,69 @@
+name: Atelier API resources
+baseUrl: http://localhost:4000/api/v1
+
+resources:
+  - name: Health
+    requests:
+      - name: Health check
+        method: GET
+        path: /health
+
+  - name: Authentication
+    requests:
+      - name: Login
+        method: POST
+        path: /auth/login
+        body:
+          email: admin@atelier.local
+          password: atelier-admin
+      - name: Register
+        method: POST
+        path: /auth/register
+      - name: Current user
+        method: GET
+        path: /auth/me
+        auth: bearer
+      - name: Logout
+        method: POST
+        path: /auth/logout
+        auth: bearer
+
+  - name: Catalog
+    requests:
+      - name: List products
+        method: GET
+        path: /products
+      - name: Create product
+        method: POST
+        path: /products
+        auth: bearer
+
+  - name: Operations
+    requests:
+      - name: Categories
+        method: GET
+        path: /categories
+      - name: Customers
+        method: GET
+        path: /customers
+      - name: Inventory
+        method: GET
+        path: /inventory
+      - name: Payments
+        method: GET
+        path: /payments
+      - name: Purchases
+        method: GET
+        path: /purchases
+      - name: Reports
+        method: GET
+        path: /reports
+      - name: Sales
+        method: GET
+        path: /sales
+      - name: Suppliers
+        method: GET
+        path: /suppliers
+      - name: Users
+        method: GET
+        path: /users

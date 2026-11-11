@@ -83,7 +83,7 @@ export const swaggerDocument = {
                   type: 'object',
                   properties: {
                     status: { type: 'string', example: 'ok' },
-                    service: { type: 'string', example: 'atelier-backend' },
+                    service: { type: 'string', example: 'boutique-backend' },
                     timestamp: { type: 'string', format: 'date-time' },
                   },
                 },

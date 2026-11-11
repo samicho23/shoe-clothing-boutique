@@ -20,7 +20,7 @@ docker compose up --build
 
 - Frontend: `http://localhost:5173`
 - Backend: `http://localhost:4000`
-- PostgreSQL: `localhost:5432`
+- PostgreSQL: `localhost:5433`
 
 Set a strong `JWT_SECRET` in a production environment before deploying. The Compose value is only a development placeholder.
 

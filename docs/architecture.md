@@ -13,4 +13,4 @@ The backend owns authorization and business rules. The frontend is a presentatio
 
 - Frontend: `http://localhost:5173`
 - API: `http://localhost:4000`
-- PostgreSQL: `localhost:5432`
+- PostgreSQL: `localhost:5433`
