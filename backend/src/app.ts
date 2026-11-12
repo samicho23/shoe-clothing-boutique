@@ -1,6 +1,6 @@
 import express from 'express'
 import { corsMiddleware } from './config/cors.js'
-import { swaggerDocument } from './config/swagger.js'
+import { swaggerDocument } from './docs/swagger.js'
 import { errorMiddleware } from './middlewares/error.middleware.js'
 import { notFoundMiddleware } from './middlewares/notFound.middleware.js'
 import { apiRoutes } from './routes/index.js'

@@ -6,7 +6,7 @@ export const api = axios.create({
 })
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('atelier_token')
+  const token = localStorage.getItem('boutique_token')
   if (token) config.headers.Authorization = ['Bearer', token].join(' ')
   return config
 })

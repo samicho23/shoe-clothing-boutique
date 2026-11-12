@@ -33,15 +33,15 @@ export const listResource = async (name: ResourceName, search = ''): Promise<Res
     }
     case 'sales': {
       const rows = await prisma.sale.findMany({ where: term ? { OR: [{ receiptNumber: { contains: term, mode: 'insensitive' } }, { customer: { name: { contains: term, mode: 'insensitive' } } }] } : {}, include: { customer: true, user: true }, orderBy: { createdAt: 'desc' } })
-      return rows.map((row) => asRecord({ id: row.id, createdAt: row.createdAt, reference: row.receiptNumber, customer: row.customer?.name ?? 'Walk-in customer', cashier: row.user.name, total: Number(row.total), status: row.paymentStatus }))
+      return rows.map((row) => asRecord({ id: row.id, createdAt: row.createdAt, reference: row.receiptNumber, customer: row.customer?.name ?? 'Walk-in customer', cashier: `${row.user.firstName} ${row.user.lastName}`, total: Number(row.total), status: row.paymentStatus }))
     }
     case 'suppliers': {
       const rows = await prisma.supplier.findMany({ where: term ? { OR: [{ name: { contains: term, mode: 'insensitive' } }, { email: { contains: term, mode: 'insensitive' } }, { phone: { contains: term, mode: 'insensitive' } }] } : {}, include: { _count: { select: { purchases: true } } }, orderBy: { createdAt: 'desc' } })
       return rows.map((row) => asRecord({ id: row.id, createdAt: row.createdAt, name: row.name, phone: row.phone ?? '', email: row.email ?? '', products: row._count.purchases, status: row.isActive ? 'Active' : 'Inactive' }))
     }
     case 'users': {
-      const rows = await prisma.user.findMany({ where: term ? { OR: [{ name: { contains: term, mode: 'insensitive' } }, { email: { contains: term, mode: 'insensitive' } }] } : {}, orderBy: { createdAt: 'desc' } })
-      return rows.map((row) => asRecord({ id: row.id, createdAt: row.createdAt, name: row.name, email: row.email, role: row.role, status: row.isActive ? 'Active' : 'Inactive' }))
+      const rows = await prisma.user.findMany({ where: term ? { OR: [{ firstName: { contains: term, mode: 'insensitive' } }, { lastName: { contains: term, mode: 'insensitive' } }, { email: { contains: term, mode: 'insensitive' } }] } : {}, include: { roles: { include: { role: true } } }, orderBy: { createdAt: 'desc' } })
+      return rows.map((row) => asRecord({ id: row.id, createdAt: row.createdAt, name: `${row.firstName} ${row.lastName}`, email: row.email ?? '', role: row.roles[0]?.role.name ?? 'CASHIER', status: row.status }))
     }
   }
 }

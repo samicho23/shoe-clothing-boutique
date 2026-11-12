@@ -3,7 +3,7 @@
 ## Development
 
 1. Copy `backend/.env.example` to `backend/.env`.
-2. Set `DATABASE_URL=postgresql://atelier:atelier_dev_password@localhost:5433/boutique_db`.
+2. Set `DATABASE_URL=postgresql://boutique:boutique_dev_password@localhost:5433/boutique_db`.
 3. Start PostgreSQL with `docker compose up -d postgres`.
 4. Run `cd backend && npm install && npm run prisma:generate`.
 5. Create the development migration with `npm run prisma:migrate -- --name init`.

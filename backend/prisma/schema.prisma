@@ -7,11 +7,10 @@ datasource db {
   provider = "postgresql"
 }
 
-enum UserRole {
-  ADMIN
-  MANAGER
-  CASHIER
-  INVENTORY_STAFF
+enum UserStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
 }
 
 enum ProductType {
@@ -58,18 +57,131 @@ enum InventoryMovementType {
 }
 
 model User {
+  id              String     @id @default(cuid())
+  email           String?    @unique
+  password        String
+  firstName       String
+  lastName        String
+  phoneNumber     String?    @unique
+  status          UserStatus @default(PENDING)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  emailVerified   Boolean    @default(false)
+  emailVerifiedAt DateTime?
+  phoneVerified   Boolean    @default(false)
+  phoneVerifiedAt DateTime?
+  roles           UserRole[]
+  auditLogs       AuditLog[]
+  contactResponses ContactSubmission[] @relation("ContactResponders")
+  sales           Sale[]
+  movements       InventoryMovement[]
+
+  @@index([status])
+}
+
+model Role {
+  id          String           @id @default(cuid())
+  name        String           @unique
+  description String?
+  isSystem    Boolean          @default(false)
+  users       UserRole[]
+  permissions RolePermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  name        String           @unique
+  resource    String
+  action      String
+  description String?
+  roles       RolePermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@unique([resource, action])
+}
+
+model UserRole {
+  userId     String
+  roleId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  assignedAt DateTime @default(now())
+
+  @@id([userId, roleId])
+  @@index([roleId])
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  assignedAt   DateTime   @default(now())
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     String
+  resource   String
+  resourceId String?
+  details    Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([resource, resourceId])
+}
+
+model NewsArticle {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String?
+  content     String
+  imageUrl    String?
+  isPublished Boolean  @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, publishedAt])
+}
+
+model GalleryItem {
+  id        String   @id @default(cuid())
+  title     String
+  imageUrl  String
+  altText   String?
+  sortOrder Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isVisible, sortOrder])
+}
+
+model ContactSubmission {
   id           String   @id @default(cuid())
   name         String
-  email        String   @unique
-  passwordHash String
-  role         UserRole @default(CASHIER)
-  isActive     Boolean  @default(true)
-  sales        Sale[]
-  movements    InventoryMovement[]
+  email        String
+  subject      String?
+  message      String
+  isResolved   Boolean  @default(false)
+  respondedAt  DateTime?
+  respondedById String?
+  respondedBy  User?    @relation("ContactResponders", fields: [respondedById], references: [id], onDelete: SetNull)
   createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
 
-  @@index([role, isActive])
+  @@index([isResolved, createdAt])
 }
 
 model Category {

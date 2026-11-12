@@ -9,9 +9,9 @@ const AuthContext = createContext<AuthContextValue | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(authStore.getUser)
-  const [isLoading, setIsLoading] = useState(() => Boolean(localStorage.getItem('atelier_token')))
+  const [isLoading, setIsLoading] = useState(() => Boolean(localStorage.getItem('boutique_token')))
   useEffect(() => {
-    if (!localStorage.getItem('atelier_token')) {
+    if (!localStorage.getItem('boutique_token')) {
       setIsLoading(false)
       return
     }
@@ -26,8 +26,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo(() => ({
     user,
     isLoading,
-    login: async (input: LoginInput) => { const result = await loginRequest(input); localStorage.setItem('atelier_token', result.token); authStore.setUser(result.user); setUser(result.user) },
-    register: async (input: RegisterInput) => { const result = await registerRequest(input); localStorage.setItem('atelier_token', result.token); authStore.setUser(result.user); setUser(result.user) },
+    login: async (input: LoginInput) => { const result = await loginRequest(input); localStorage.setItem('boutique_token', result.token); authStore.setUser(result.user); setUser(result.user) },
+    register: async (input: RegisterInput) => { const result = await registerRequest(input); localStorage.setItem('boutique_token', result.token); authStore.setUser(result.user); setUser(result.user) },
     logout: () => { void logoutRequest().catch(() => undefined); authStore.clear(); setUser(null) },
   }), [user, isLoading])
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

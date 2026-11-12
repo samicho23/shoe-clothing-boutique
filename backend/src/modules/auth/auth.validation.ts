@@ -6,7 +6,9 @@ export const loginSchema = z.object({
 })
 
 export const registerSchema = z.object({
-  name: z.string().trim().min(2).max(80),
+  firstName: z.string().trim().min(1).max(40),
+  lastName: z.string().trim().min(1).max(40),
   email: z.string().email().transform((value) => value.toLowerCase()),
+  phoneNumber: z.string().trim().regex(/^\+?[0-9\s()-]{7,30}$/, 'Enter a valid phone number'),
   password: z.string().min(8).max(128),
 })

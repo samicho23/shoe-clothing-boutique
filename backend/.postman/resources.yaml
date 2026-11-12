@@ -1,4 +1,4 @@
-name: Atelier API resources
+name: boutique API resources
 baseUrl: http://localhost:4000/api/v1
 
 resources:
@@ -14,8 +14,8 @@ resources:
         method: POST
         path: /auth/login
         body:
-          email: admin@atelier.local
-          password: atelier-admin
+          email: admin@boutique.local
+          password: boutique-admin
       - name: Register
         method: POST
         path: /auth/register

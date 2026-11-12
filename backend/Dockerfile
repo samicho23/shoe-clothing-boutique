@@ -1,6 +1,6 @@
 FROM node:22-alpine AS build
 WORKDIR /app
-ENV DATABASE_URL=postgresql://atelier:atelier_dev_password@postgres:5432/boutique_db
+ENV DATABASE_URL=postgresql://boutique:boutique_dev_password@postgres:5432/boutique_db
 COPY package*.json ./
 RUN npm ci
 COPY . .

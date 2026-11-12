@@ -6,11 +6,16 @@ import { hashPassword } from '../src/utils/password.js'
 const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: env.DATABASE_URL }) })
 
 const main = async () => {
-  const passwordHash = await hashPassword('atelier-admin')
+  const password = await hashPassword('boutique-admin')
+  const adminRole = await prisma.role.upsert({
+    where: { name: 'ADMIN' },
+    update: { description: 'Full boutique administration access', isSystem: true },
+    create: { name: 'ADMIN', description: 'Full boutique administration access', isSystem: true },
+  })
   await prisma.user.upsert({
-    where: { email: 'admin@atelier.local' },
-    update: { passwordHash, name: 'Jordan Smith', role: 'ADMIN', isActive: true },
-    create: { email: 'admin@atelier.local', passwordHash, name: 'Jordan Smith', role: 'ADMIN' },
+    where: { email: 'admin@boutique.local' },
+    update: { password, firstName: 'Abebe', lastName: 'Bekele', status: 'ACTIVE', emailVerified: true, roles: { connect: { id: adminRole.id } } },
+    create: { email: 'admin@boutique.local', password, firstName: 'Abebe', lastName: 'Bekele', status: 'ACTIVE', emailVerified: true, roles: { connect: { id: adminRole.id } } },
   })
   await prisma.category.createMany({
     data: [

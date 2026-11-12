@@ -4,14 +4,14 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: boutique_db
-      POSTGRES_USER: atelier
-      POSTGRES_PASSWORD: atelier_dev_password
+      POSTGRES_USER: boutique
+      POSTGRES_PASSWORD: boutique_dev_password
     ports:
       - "5433:5432"
     volumes:
       - boutique_db_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U atelier -d boutique_db"]
+      test: ["CMD-SHELL", "pg_isready -U boutique -d boutique_db"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -24,7 +24,7 @@ services:
       NODE_ENV: production
       PORT: 4000
       FRONTEND_URL: http://localhost:5173
-      DATABASE_URL: postgresql://atelier:atelier_dev_password@postgres:5432/boutique_db
+      DATABASE_URL: postgresql://boutique:boutique_dev_password@postgres:5432/boutique_db
       JWT_SECRET: change-this-in-production-use-a-random-secret
       JWT_EXPIRES_IN: 1d
     depends_on:

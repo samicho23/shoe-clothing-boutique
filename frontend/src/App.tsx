@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
   BarChart3, Bell, Boxes, ChevronDown, ClipboardList, CreditCard,
   FileBarChart, LayoutDashboard, Menu, Package, Search, Settings,
-  ShoppingBag, ShoppingCart, Users, type LucideIcon,
+  ShoppingBag, ShoppingCart, ShieldCheck, Users, type LucideIcon,
 } from 'lucide-react'
 import { useAuth } from './contexts/AuthContext'
 
@@ -28,15 +28,16 @@ export default function App() {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuth()
+  const visibleNavItems = user?.role === 'ADMIN' ? [...navItems, { label: 'Admin centre', path: '/admin', icon: ShieldCheck, section: 'ADMIN' }] : navItems
   const [query, setQuery] = useState('')
   const [mobileNav, setMobileNav] = useState(false)
   const [notificationOpen, setNotificationOpen] = useState(false)
-  const active = navItems.find((item) => item.path === location.pathname) ?? {
+  const active = visibleNavItems.find((item) => item.path === location.pathname) ?? {
     label: location.pathname === '/settings' ? 'Settings' : location.pathname === '/profile' ? 'Profile' : 'Workspace',
     path: location.pathname,
     icon: Settings,
   }
-  const initials = (user?.name ?? 'Atelier').split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase()
+  const initials = (user?.name ?? 'boutique').split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase()
   const go = (path: string) => {
     navigate(path)
     setMobileNav(false)
@@ -44,14 +45,14 @@ export default function App() {
 
   return <div className="app-shell retail-shell">
     <aside className={`sidebar ${mobileNav ? 'sidebar-open' : ''}`}>
-      <div className="brand"><div className="brand-mark">A</div><div><strong>atelier</strong><span>RETAIL OPERATIONS</span></div></div>
-      <div className="workspace-switch"><div className="avatar">{initials}</div><div><b>Atelier Maison</b><span>Downtown boutique</span></div><ChevronDown size={16} /></div>
-      <nav>{navItems.map((item) => <div key={item.path}>{item.section && <small className="nav-section">{item.section}</small>}<button className={active.path === item.path ? 'nav-item active' : 'nav-item'} onClick={() => go(item.path)}><item.icon size={17} /><span>{item.label}</span></button></div>)}</nav>
-      <div className="sidebar-bottom"><button className={`nav-item ${active.label === 'Settings' ? 'active' : ''}`} onClick={() => go('/settings')}><Settings size={17} /><span>Settings</span></button><button className="profile" onClick={logout}><div className="avatar avatar-dark">{initials}</div><div><b>{user?.name ?? 'Atelier user'}</b><span>{user?.role ?? 'User'} · Sign out</span></div></button></div>
+      <div className="brand"><div className="brand-mark">A</div><div><strong>boutique</strong><span>RETAIL OPERATIONS</span></div></div>
+      <div className="workspace-switch"><div className="avatar">{initials}</div><div><b>boutique Maison</b><span>Downtown boutique</span></div><ChevronDown size={16} /></div>
+      <nav>{visibleNavItems.map((item) => <div key={item.path}>{item.section && <small className="nav-section">{item.section}</small>}<button className={active.path === item.path ? 'nav-item active' : 'nav-item'} onClick={() => go(item.path)}><item.icon size={17} /><span>{item.label}</span></button></div>)}</nav>
+      <div className="sidebar-bottom"><button className={`nav-item ${active.label === 'Settings' ? 'active' : ''}`} onClick={() => go('/settings')}><Settings size={17} /><span>Settings</span></button><button className="profile" onClick={logout}><div className="avatar avatar-dark">{initials}</div><div><b>{user?.name ?? 'boutique user'}</b><span>{user?.role ?? 'User'} · Sign out</span></div></button></div>
     </aside>
     {mobileNav && <button className="scrim" onClick={() => setMobileNav(false)} aria-label="Close navigation" />}
     <main className="main">
-      <header className="topbar"><button className="mobile-menu" onClick={() => setMobileNav(true)}><Menu size={21} /></button><div className="crumbs"><span>Atelier Maison</span><b>/</b><strong>{active.label}</strong></div><div className="top-actions"><div className="global-search"><Search size={16} /><input placeholder="Search workspace..." value={query} onChange={(event) => setQuery(event.target.value)} /><kbd>⌘ K</kbd></div><button className="icon-btn notification-btn" onClick={() => setNotificationOpen(!notificationOpen)} aria-label="Notifications"><Bell size={19} /><i /></button><button className="top-avatar" onClick={() => go('/profile')}>{initials}</button></div>{notificationOpen && <div className="notifications"><b>Notifications</b><p>Your workspace is connected.</p><p>Use the sidebar to manage operations.</p></div>}</header>
+      <header className="topbar"><button className="mobile-menu" onClick={() => setMobileNav(true)}><Menu size={21} /></button><div className="crumbs"><span>boutique Maison</span><b>/</b><strong>{active.label}</strong></div><div className="top-actions"><div className="global-search"><Search size={16} /><input placeholder="Search workspace..." value={query} onChange={(event) => setQuery(event.target.value)} /><kbd>⌘ K</kbd></div><button className="icon-btn notification-btn" onClick={() => setNotificationOpen(!notificationOpen)} aria-label="Notifications"><Bell size={19} /><i /></button><button className="top-avatar" onClick={() => go('/profile')}>{initials}</button></div>{notificationOpen && <div className="notifications"><b>Notifications</b><p>Your workspace is connected.</p><p>Use the sidebar to manage operations.</p></div>}</header>
       <div className="content"><Outlet /></div>
     </main>
   </div>

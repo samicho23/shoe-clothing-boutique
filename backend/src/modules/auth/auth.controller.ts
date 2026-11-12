@@ -13,7 +13,7 @@ export const loginController = async (req: Request, res: Response) => {
 export const registerController = async (req: Request, res: Response) => {
   const result = await register(req.body)
   if (!result) {
-    res.status(409).json({ error: 'An account with this email already exists' })
+    res.status(409).json({ error: 'An account with this email or phone number already exists' })
     return
   }
   res.status(201).json({ data: result })

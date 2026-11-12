@@ -7,7 +7,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(4000),
   FRONTEND_URL: z.string().url().default('http://localhost:5173'),
-  DATABASE_URL: z.string().min(1).default('postgresql://atelier:atelier_dev_password@localhost:5433/boutique_db'),
+  DATABASE_URL: z.string().min(1).default('postgresql://boutique:boutique_dev_password@localhost:5433/boutique_db'),
   JWT_SECRET: z.string().min(32).default(developmentJwtSecret),
   JWT_EXPIRES_IN: z.string().default('1d'),
   POSTMARK_SERVER_TOKEN: z.string().optional(),

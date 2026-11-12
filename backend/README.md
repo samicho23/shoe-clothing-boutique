@@ -1,6 +1,6 @@
-# Atelier backend
+# boutique backend
 
-Express + TypeScript API for the Atelier frontend. The backend uses PostgreSQL through Prisma for authentication, products, inventory, dashboard metrics, and resource modules.
+Express + TypeScript API for the boutique frontend. The backend uses PostgreSQL through Prisma for authentication, products, inventory, dashboard metrics, and resource modules.
 
 ```bash
 npm install
@@ -10,7 +10,7 @@ npm exec prisma db seed
 npm run dev
 ```
 
-Set `DATABASE_URL` in `.env` to your PostgreSQL connection string. For the included development Docker stack, use `postgresql://atelier:atelier_dev_password@localhost:5433/boutique_db`.
+Set `DATABASE_URL` in `.env` to your PostgreSQL connection string. For the included development Docker stack, use `postgresql://boutique:boutique_dev_password@localhost:5433/boutique_db`.
 
 The initial schema migration is stored in `prisma/migrations/20261111223000_init`. The API is available at `http://localhost:4000/api/v1`.
 
@@ -21,8 +21,8 @@ The backend API resource catalog for importing into API tooling is available at 
 Demo login:
 
 ```text
-email: admin@atelier.local
-password: atelier-admin
+email: admin@boutique.local
+password: boutique-admin
 ```
 
 Do not use the demo credentials in production. Set a random `JWT_SECRET` in `backend/.env`.

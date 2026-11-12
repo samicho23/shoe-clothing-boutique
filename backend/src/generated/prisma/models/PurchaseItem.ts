@@ -541,10 +541,6 @@ export type PurchaseItemUncheckedUpdateManyWithoutPurchaseNestedInput = {
   deleteMany?: Prisma.PurchaseItemScalarWhereInput | Prisma.PurchaseItemScalarWhereInput[]
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type PurchaseItemCreateWithoutProductInput = {
   id?: string
   quantity: number

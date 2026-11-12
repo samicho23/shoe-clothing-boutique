@@ -1,6 +1,6 @@
-# Atelier — Boutique operations
+# boutique — Boutique operations
 
-Atelier is a responsive React/Vite dashboard with a separate Express/TypeScript API for managing a shoe and clothing boutique. The current slice establishes the visual system and the main operational surfaces: overview metrics, revenue reporting, inventory watch, product management, navigation between modules, notifications, and an add-product workflow.
+boutique is a responsive React/Vite dashboard with a separate Express/TypeScript API for managing a shoe and clothing boutique. The current slice establishes the visual system and the main operational surfaces: overview metrics, revenue reporting, inventory watch, product management, navigation between modules, notifications, and an add-product workflow.
 
 ## Run locally
 

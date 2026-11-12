@@ -1,6 +1,6 @@
 # Architecture
 
-Atelier is split into a Vite React client and an Express TypeScript API.
+boutique is split into a Vite React client and an Express TypeScript API.
 
 - `frontend/`: responsive dashboard and future REST query/mutation hooks.
 - `backend/`: versioned API under `/api/v1`, validation, and persistence boundary.

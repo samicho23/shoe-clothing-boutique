@@ -9,14 +9,13 @@
 * 🟢 You can import this file directly.
 */
 
-export const UserRole = {
-  ADMIN: 'ADMIN',
-  MANAGER: 'MANAGER',
-  CASHIER: 'CASHIER',
-  INVENTORY_STAFF: 'INVENTORY_STAFF'
+export const UserStatus = {
+  PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED'
 } as const
 
-export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 
 
 export const ProductType = {

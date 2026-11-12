@@ -19,11 +19,15 @@ import { SuppliersPage } from '../pages/suppliers/SuppliersPage'
 import { UsersPage } from '../pages/users/UsersPage'
 import { ProfilePage } from '../pages/profile/ProfilePage'
 import { SettingsPage } from '../pages/settings/SettingsPage'
+import { StorefrontPage } from '../pages/public/StorefrontPage'
+import { AdminPage } from '../pages/admin/AdminPage'
+import { RoleBasedRoute } from './RoleBasedRoute'
 
 export function AppRoutes() {
   return <Routes>
     <Route path="/login" element={<LoginPage />} />
     <Route path="/register" element={<RegisterPage />} />
+    <Route path="/storefront" element={<StorefrontPage />} />
     <Route path="/unauthorized" element={<UnauthorizedPage />} />
     <Route element={<ProtectedRoute><App /></ProtectedRoute>}>
       <Route path="/" element={<DashboardPage />} />
@@ -41,6 +45,7 @@ export function AppRoutes() {
       <Route path="/reports" element={<ReportsPage />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/admin" element={<RoleBasedRoute roles={['ADMIN']}><AdminPage /></RoleBasedRoute>} />
     </Route>
     <Route path="*" element={<NotFoundPage />} />
   </Routes>
