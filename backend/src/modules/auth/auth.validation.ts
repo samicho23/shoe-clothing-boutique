@@ -12,3 +12,12 @@ export const registerSchema = z.object({
   phoneNumber: z.string().trim().regex(/^\+?[0-9\s()-]{7,30}$/, 'Enter a valid phone number'),
   password: z.string().min(8).max(128),
 })
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email().transform((value) => value.toLowerCase()),
+})
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(32),
+  password: z.string().min(8).max(128),
+})

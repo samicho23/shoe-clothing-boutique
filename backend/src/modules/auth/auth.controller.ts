@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import { login, register, getCurrentUser } from './auth.service.js'
+import { login, register, getCurrentUser, requestPasswordReset, resetPassword } from './auth.service.js'
 
 export const loginController = async (req: Request, res: Response) => {
   const result = await login(req.body)
@@ -25,4 +25,18 @@ export const meController = (req: Request, res: Response) => {
 
 export const logoutController = (_req: Request, res: Response) => {
   res.status(204).send()
+}
+
+export const forgotPasswordController = async (req: Request, res: Response) => {
+  await requestPasswordReset(req.body.email)
+  res.json({ data: { message: 'If an account exists for that email, a reset link has been sent.' } })
+}
+
+export const resetPasswordController = async (req: Request, res: Response) => {
+  const updated = await resetPassword(req.body.token, req.body.password)
+  if (!updated) {
+    res.status(400).json({ error: 'This reset link is invalid or has expired.' })
+    return
+  }
+  res.json({ data: { message: 'Your password has been reset. You can now sign in.' } })
 }

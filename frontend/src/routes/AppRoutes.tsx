@@ -22,16 +22,26 @@ import { SettingsPage } from '../pages/settings/SettingsPage'
 import { StorefrontPage } from '../pages/public/StorefrontPage'
 import { AdminPage } from '../pages/admin/AdminPage'
 import { RoleBasedRoute } from './RoleBasedRoute'
+import { useAuth } from '../contexts/AuthContext'
+import { Loading } from '../components/common/Loading'
+
+function HomeRoute() {
+  const { user, isLoading } = useAuth()
+  if (isLoading) return <Loading />
+  return user ? <App><DashboardPage /></App> : <StorefrontPage />
+}
 
 export function AppRoutes() {
   return <Routes>
     <Route path="/login" element={<LoginPage />} />
     <Route path="/register" element={<RegisterPage />} />
+    <Route path="/" element={<HomeRoute />} />
     <Route path="/storefront" element={<StorefrontPage />} />
     <Route path="/unauthorized" element={<UnauthorizedPage />} />
-    <Route element={<ProtectedRoute><App /></ProtectedRoute>}>
-      <Route path="/" element={<DashboardPage />} />
+    <Route element={<App />}>
       <Route path="/dashboard" element={<DashboardPage />} />
+    </Route>
+    <Route element={<ProtectedRoute><App /></ProtectedRoute>}>
       <Route path="/pos" element={<PosPage />} />
       <Route path="/sales" element={<SalesPage />} />
       <Route path="/payments" element={<PaymentsPage />} />

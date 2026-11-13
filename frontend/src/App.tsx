@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
   BarChart3, Bell, Boxes, ChevronDown, ClipboardList, CreditCard,
@@ -10,7 +10,7 @@ import { useAuth } from './contexts/AuthContext'
 type NavItem = { label: string; path: string; icon: LucideIcon; section?: string }
 
 const navItems: NavItem[] = [
-  { label: 'Dashboard', path: '/', icon: LayoutDashboard },
+  { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { label: 'Point of sale', path: '/pos', icon: ShoppingCart, section: 'OPERATIONS' },
   { label: 'Sales', path: '/sales', icon: FileBarChart },
   { label: 'Payments', path: '/payments', icon: CreditCard },
@@ -24,7 +24,7 @@ const navItems: NavItem[] = [
   { label: 'Reports', path: '/reports', icon: BarChart3, section: 'INSIGHTS' },
 ]
 
-export default function App() {
+export default function App({ children }: { children?: ReactNode }) {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuth()
@@ -53,7 +53,7 @@ export default function App() {
     {mobileNav && <button className="scrim" onClick={() => setMobileNav(false)} aria-label="Close navigation" />}
     <main className="main">
       <header className="topbar"><button className="mobile-menu" onClick={() => setMobileNav(true)}><Menu size={21} /></button><div className="crumbs"><span>boutique Maison</span><b>/</b><strong>{active.label}</strong></div><div className="top-actions"><div className="global-search"><Search size={16} /><input placeholder="Search workspace..." value={query} onChange={(event) => setQuery(event.target.value)} /><kbd>⌘ K</kbd></div><button className="icon-btn notification-btn" onClick={() => setNotificationOpen(!notificationOpen)} aria-label="Notifications"><Bell size={19} /><i /></button><button className="top-avatar" onClick={() => go('/profile')}>{initials}</button></div>{notificationOpen && <div className="notifications"><b>Notifications</b><p>Your workspace is connected.</p><p>Use the sidebar to manage operations.</p></div>}</header>
-      <div className="content"><Outlet /></div>
+      <div className="content">{children ?? <Outlet />}</div>
     </main>
   </div>
 }
