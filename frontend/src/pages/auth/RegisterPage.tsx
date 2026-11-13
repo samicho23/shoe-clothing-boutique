@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ArrowRight, Check, Chrome, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import { AuthPageShell } from './LoginPage'
@@ -8,6 +8,8 @@ import { AuthPageShell } from './LoginPage'
 export function RegisterPage() {
   const { register } = useAuth()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
+  const next = params.get('next')
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phoneNumber: '', password: '', confirmPassword: '' })
   const [showPassword, setShowPassword] = useState(false)
   const [termsAccepted, setTermsAccepted] = useState(false)
@@ -25,7 +27,7 @@ export function RegisterPage() {
     setLoading(true)
     try {
       await register({ firstName: form.firstName.trim(), lastName: form.lastName.trim(), email: form.email, phoneNumber: form.phoneNumber.trim(), password: form.password })
-      navigate('/')
+      navigate(next && next.startsWith('/') ? next : '/')
     } catch {
       setError('This email or phone number may already be registered. Try signing in instead.')
     } finally {

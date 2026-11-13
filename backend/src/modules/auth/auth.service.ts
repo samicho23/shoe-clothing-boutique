@@ -7,6 +7,7 @@ import type { UserRole } from '../../types/common.types.js'
 import { prisma } from '../../config/database.js'
 import { env } from '../../config/env.js'
 import { sendEmail } from '../../lib/postmark.js'
+import { logger } from '../../config/logger.js'
 
 export const login = async ({ email, password }: LoginInput) => {
   const user = await prisma.user.findUnique({ where: { email }, include: { roles: { include: { role: true } } } })
@@ -62,12 +63,17 @@ export const requestPasswordReset = async (email: string) => {
   })
 
   const resetUrl = `${env.FRONTEND_URL}/reset-password?token=${token}`
-  await sendEmail({
-    to: user.email,
-    subject: 'Reset your boutique password',
-    htmlBody: `<p>We received a request to reset your boutique password.</p><p><a href="${resetUrl}">Reset your password</a></p><p>This link expires in one hour. If you did not request this, you can ignore this email.</p>`,
-    textBody: `Reset your password: ${resetUrl}\nThis link expires in one hour.`,
-  })
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: 'Reset your boutique password',
+      htmlBody: `<p>We received a request to reset your boutique password.</p><p><a href="${resetUrl}">Reset your password</a></p><p>This link expires in one hour. If you did not request this, you can ignore this email.</p>`,
+      textBody: `Reset your password: ${resetUrl}\nThis link expires in one hour.`,
+    })
+  } catch (error) {
+    logger.error('Password reset email could not be sent', { error: error instanceof Error ? error.message : String(error) })
+    if (env.NODE_ENV !== 'production') logger.info('Development password reset link', { email: user.email, resetUrl })
+  }
 }
 
 export const resetPassword = async (token: string, password: string) => {

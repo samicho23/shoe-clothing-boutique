@@ -13,6 +13,7 @@ import { supplierRoutes } from '../modules/suppliers/supplier.routes.js'
 import { userRoutes } from '../modules/users/user.routes.js'
 import { adminRoutes } from '../modules/admin/admin.routes.js'
 import { metaRoutes } from '../modules/meta/meta.routes.js'
+import { orderRoutes } from '../modules/orders/order.routes.js'
 import { publicRoutes } from '../modules/public/public.routes.js'
 
 export const apiRoutes = Router()
@@ -30,5 +31,6 @@ apiRoutes.use('/sales', saleRoutes)
 apiRoutes.use('/suppliers', supplierRoutes)
 apiRoutes.use('/users', userRoutes)
 apiRoutes.use('/admin', adminRoutes)
+apiRoutes.use('/orders', orderRoutes)
 apiRoutes.use('/meta', metaRoutes)
 apiRoutes.use('/public', publicRoutes)

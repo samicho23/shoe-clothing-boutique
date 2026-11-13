@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Eye, EyeOff, LockKeyhole, Mail, ArrowRight, Check, Chrome, Facebook } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 
 export function LoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
+  const next = params.get('next')
   const [form, setForm] = useState({ email: '', password: '' })
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
@@ -18,7 +20,7 @@ export function LoginPage() {
     setLoading(true)
     try {
       await login(form)
-      navigate('/')
+      navigate(next && next.startsWith('/') ? next : '/')
     } catch {
       setError('We could not sign you in. Check your email and password.')
     } finally {
@@ -30,12 +32,12 @@ export function LoginPage() {
     <form className="auth-form" onSubmit={submit}>
       <label>Email address<input required type="email" placeholder="you@boutique.com" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} /><Mail size={17} /></label>
       <label>Password<div className="password-field"><input required minLength={8} type={showPassword ? 'text' : 'password'} placeholder="Enter your password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} /><button type="button" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></div><LockKeyhole size={17} /></label>
-      <div className="login-options"><label className="remember-me"><input type="checkbox" /><span><Check size={11} /></span>Remember me</label><button type="button" className="forgot-password">Forgot password?</button></div>
+      <div className="login-options"><label className="remember-me"><input type="checkbox" /><span><Check size={11} /></span>Remember me</label><Link className="forgot-password" to="/forgot-password">Forgot password?</Link></div>
       {error && <p className="auth-error" role="alert">{error}</p>}
       <button className="auth-submit" disabled={loading}>{loading ? 'Signing in…' : 'Sign in'}<ArrowRight size={17} /></button>
       <div className="login-divider"><span>Or login with</span></div>
       <div className="social-login"><button type="button"><Chrome size={14} />Google</button><button type="button"><Facebook size={14} />Facebook</button></div>
-      <p className="auth-switch">Don’t have an account? <Link to="/register">Create one</Link></p>
+      <p className="auth-switch">Don’t have an account? <Link to={next ? `/register?next=${encodeURIComponent(next)}` : '/register'}>Create one</Link></p>
     </form>
   </AuthPageShell>
 }

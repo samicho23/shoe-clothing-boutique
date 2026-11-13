@@ -12,6 +12,7 @@ type NavItem = { label: string; path: string; icon: LucideIcon; section?: string
 const navItems: NavItem[] = [
   { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { label: 'Point of sale', path: '/pos', icon: ShoppingCart, section: 'OPERATIONS' },
+  { label: 'Online orders', path: '/orders', icon: ClipboardList },
   { label: 'Sales', path: '/sales', icon: FileBarChart },
   { label: 'Payments', path: '/payments', icon: CreditCard },
   { label: 'Products', path: '/products', icon: Package, section: 'CATALOG' },

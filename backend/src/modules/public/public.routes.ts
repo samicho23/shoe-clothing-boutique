@@ -1,7 +1,9 @@
 import { Router } from 'express'
 import { prisma } from '../../config/database.js'
+import { requireAuth } from '../../middlewares/auth.middleware.js'
 import { validateBody } from '../../middlewares/validate.middleware.js'
-import { contactSchema } from './public.validation.js'
+import { FLAT_SHIPPING_FEE, FREE_SHIPPING_THRESHOLD, placeOrder } from './order.service.js'
+import { contactSchema, orderSchema } from './public.validation.js'
 
 export const publicRoutes = Router()
 
@@ -51,6 +53,15 @@ publicRoutes.get('/gallery', async (_req, res) => {
     orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
   })
   res.json({ data })
+})
+
+publicRoutes.get('/shipping', (_req, res) => {
+  res.json({ data: { freeShippingThreshold: FREE_SHIPPING_THRESHOLD, flatShippingFee: FLAT_SHIPPING_FEE } })
+})
+
+publicRoutes.post('/orders', requireAuth, validateBody(orderSchema), async (req, res) => {
+  const data = await placeOrder(req.user!, req.body)
+  res.status(201).json({ data })
 })
 
 publicRoutes.post('/contact', validateBody(contactSchema), async (req, res) => {
